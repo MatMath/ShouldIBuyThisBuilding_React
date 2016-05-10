@@ -12,7 +12,6 @@ class Inputcontroller extends React.Component {
         <div><button>Estimate Rent per block</button> rent: (Value Here)</div>
         <div>Fix expenses % taxes</div>
         <div>Welcome taxes Calculation display</div>
-        <hr />
       </div>
    );
   }
