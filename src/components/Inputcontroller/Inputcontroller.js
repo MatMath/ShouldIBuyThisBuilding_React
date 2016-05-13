@@ -21,13 +21,61 @@ class Inputcontroller extends React.Component {
     super(props)
     this.state = {
       loading:false,
+      mortgageValue: 200000
+    }
+  }
+  changeMortgageValue (event) {
+    console.log(this);
+    this.setState({mortgageValue: event.target.value});
+  }
+  render() {
+    const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
+    const {mortgageValue} = this.state;
+    return (
+      <div>
+        <hr />
+        <div>
+          Select Building Type:
+          <select>
+            {buildingTypeList.map((building, i) => {
+                const { Title, Appartment} = building
+                return (<option key={i} value={Appartment}>{Title}</option>)
+            })}
+          </select>
+          {/*
+            This is to find the number of appartment in the building
+            TODO: OnClick add the value somewhere???
+          */}
+        </div>
+        <SelectNeiborhood neiborhoodlist={neiborhoodlist} />
+        <div>
+          Mortgage value:
+          <input
+            type='number'
+            defaultValue={mortgageValue}
+            onChange={this.changeMortgageValue.bind(this)}/>
+            {this.state.mortgageValue}
+        </div>
+        <div>Selec Mortgage % value</div>
+        <div><button>Estimate Rent per block</button> rent: (Value Here)</div>
+        <div>Fix expenses % taxes</div>
+        <div>Welcome taxes Calculation display</div>
+      </div>
+   );
+  }
+}
+
+class SelectNeiborhood extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
       value: '',
       suggestions: this.getSuggestions('')
     }
     this.onChange = this.onChange.bind(this);
     this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
   }
-  onChange(event, { newValue, method }) {
+  onChange(event, {newValue}) {
       this.setState({
         value: newValue
       });
@@ -37,8 +85,8 @@ class Inputcontroller extends React.Component {
         suggestions: this.getSuggestions(value)
       });
   }
-  onSuggestionSelected(event, { suggestion, suggestionValue, sectionIndex, method }) {
-    console.log("Autosuggest was selected on code:", suggestion.Code);
+  onSuggestionSelected(event, {suggestion}) {
+    console.log('Autosuggest was selected on code:', suggestion.Code);
   }
   getSuggestions(value) {
     const escapedValue = escapeRegexCharacters(value.trim());
@@ -49,43 +97,21 @@ class Inputcontroller extends React.Component {
     return this.props.neiborhoodlist.filter(neiborhood => regex.test(neiborhood.City));
   }
   render() {
-    const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
-    const { value, suggestions } = this.state;
+    const {value, suggestions } = this.state;
     const inputProps = {
-      placeholder: "Type your neiborhood name",
+      placeholder: 'Type your neiborhood name',
       value,
       onChange: this.onChange
     };
     return (
-      <div>
-        <hr />
-        <div>
-          Select Building Type: 
-          <select>
-            {buildingTypeList.map((building, i) => {
-                const { Title, Appartment} = building
-                return (<option key={Title} value={Appartment}>{Title}</option>)
-            })}
-          </select>
-          {/* 
-            This is to find the number of appartment in the building
-            TODO: OnClick add the value somewhere???
-          */}
-        </div>
-        <div>Selec Building Neiborhood
-            <Autosuggest suggestions={suggestions}
-                 onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
-                 getSuggestionValue={getSuggestionValue}
-                 renderSuggestion={renderSuggestion}
-                 inputProps={inputProps}
-                 onSuggestionSelected={this.onSuggestionSelected} />
-                 Result is: {value}
-        </div>
-        <div>Building Value + Down Payment OR value -> Extract value out of the Building down back into the Calculation</div>
-        <div>Selec Mortgage % value</div>
-        <div><button>Estimate Rent per block</button> rent: (Value Here)</div>
-        <div>Fix expenses % taxes</div>
-        <div>Welcome taxes Calculation display</div>
+      <div>Selec Building Neiborhood
+        <Autosuggest suggestions={suggestions}
+             onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+             getSuggestionValue={getSuggestionValue}
+             renderSuggestion={renderSuggestion}
+             inputProps={inputProps}
+             onSuggestionSelected={this.onSuggestionSelected} />
+             Result is: {value}
       </div>
    );
   }
