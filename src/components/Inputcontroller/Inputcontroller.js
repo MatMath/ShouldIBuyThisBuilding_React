@@ -1,85 +1,18 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
-
-const languages = [
-  {
-    name: 'C',
-    year: 1972
-  },
-  {
-    name: 'C#',
-    year: 2000
-  },
-  {
-    name: 'C++',
-    year: 1983
-  },
-  {
-    name: 'Clojure',
-    year: 2007
-  },
-  {
-    name: 'Elm',
-    year: 2012
-  },
-  {
-    name: 'Go',
-    year: 2009
-  },
-  {
-    name: 'Haskell',
-    year: 1990
-  },
-  {
-    name: 'Java',
-    year: 1995
-  },
-  {
-    name: 'Javascript',
-    year: 1995
-  },
-  {
-    name: 'Perl',
-    year: 1987
-  },
-  {
-    name: 'PHP',
-    year: 1995
-  },
-  {
-    name: 'Python',
-    year: 1991
-  },
-  {
-    name: 'Ruby',
-    year: 1995
-  },
-  {
-    name: 'Scala',
-    year: 2003
-  }
-];
+require('./Inputcontroller.css');
 
 function escapeRegexCharacters(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function getSuggestions(value) {
-  const escapedValue = escapeRegexCharacters(value.trim());
-  if (escapedValue === '') {
-    return [];
-  }
-  const regex = new RegExp('^' + escapedValue, 'i');
-  return languages.filter(language => regex.test(language.name));
-}
-
 function getSuggestionValue(suggestion) {
-  return suggestion.name;
+  return suggestion.City;
 }
 
 function renderSuggestion(suggestion) {
   return (
-    <span>{suggestion.name}</span>
+    <span>{suggestion.City}, {suggestion.Code}</span>
   );
 }
 
@@ -89,7 +22,7 @@ class Inputcontroller extends React.Component {
     this.state = {
       loading:false,
       value: '',
-      suggestions: getSuggestions('')
+      suggestions: this.getSuggestions('')
     }
     this.onChange = this.onChange.bind(this);
     this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
@@ -101,14 +34,25 @@ class Inputcontroller extends React.Component {
   }
   onSuggestionsUpdateRequested({ value }) {
       this.setState({
-        suggestions: getSuggestions(value)
+        suggestions: this.getSuggestions(value)
       });
+  }
+  onSuggestionSelected(event, { suggestion, suggestionValue, sectionIndex, method }) {
+    console.log("Autosuggest was selected on code:", suggestion.Code);
+  }
+  getSuggestions(value) {
+    const escapedValue = escapeRegexCharacters(value.trim());
+    if (escapedValue === '') {
+      return [];
+    }
+    const regex = new RegExp('^' + escapedValue, 'i');
+    return this.props.neiborhoodlist.filter(neiborhood => regex.test(neiborhood.City));
   }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
     const { value, suggestions } = this.state;
     const inputProps = {
-      placeholder: "Type 'c'",
+      placeholder: "Type your neiborhood name",
       value,
       onChange: this.onChange
     };
@@ -133,7 +77,8 @@ class Inputcontroller extends React.Component {
                  onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
                  getSuggestionValue={getSuggestionValue}
                  renderSuggestion={renderSuggestion}
-                 inputProps={inputProps} />
+                 inputProps={inputProps}
+                 onSuggestionSelected={this.onSuggestionSelected} />
                  Result is: {value}
         </div>
         <div>Building Value + Down Payment OR value -> Extract value out of the Building down back into the Calculation</div>
