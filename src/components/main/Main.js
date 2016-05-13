@@ -17,9 +17,7 @@ class AppComponent extends React.Component {
   render() {
   	const {buildingTypeList, neiborhoodlist, interestRate} = this.props.fetchedData;
     return (
-      <div className='index'>
-      	TODO: Add Bootstrap classes.
-  			50% width Container for the Building components inside should be a list of different Element of the structure
+      <div className='index container'>
   			<Inputcontroller buildingTypeList={buildingTypeList} neiborhoodlist={neiborhoodlist} interestRate={interestRate}/>
   			<GenericResults />
   			<div>Collapsable table of the expenses by months? year?</div>

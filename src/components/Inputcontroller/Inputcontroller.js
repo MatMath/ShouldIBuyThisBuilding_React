@@ -29,45 +29,41 @@ class Inputcontroller extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      loading:false,
-      houseValue: 200000,
+      houseValue: 500000,
       downPayment: 10,
-      intRate: '',
-      fixExpenses: 1.75
+      intRate: parseFloat(this.props.interestRate[0].latestIntRate),
+      fixExpenses: 1.75,
+      nbrAppartment: 1,
+      neiborhood: {
+        name: '',
+        code: ''
+      }
     }
   }
-  changeHouseValue (event) {
-    // This set the Mortgage value
-    this.setState({houseValue: event.target.value});
+  changeValue (key, event) {
+    // This set the value of the proper Key.
+    this.setState({[key]: event.target.value});
   }
-  changeIntRate (event) {
-    // This Set the Interest Rate
-    this.setState({intRate: event.target.value});
-  }
-  changeFixExpenses (event) {
-    // This Set the Interest Rate
-    this.setState({fixExpenses: event.target.value});
-  }
-  changedownPayment (event) {
-    // This Set the Interest Rate
-    this.setState({downPayment: event.target.value});
+  changeNumberValue (key, event) {
+    // This set the value of the proper Key.
+    this.setState({[key]: parseFloat(event.target.value)});
   }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
-    const {houseValue, downPayment, fixExpenses} = this.state;
+    const {houseValue, downPayment, fixExpenses, intRate, nbrAppartment} = this.state;
     return (
-      <div className='container striped'>
+      <div>
         <div className='row'>
           <div className='col-sm-2'>Building Type: </div>
           <div className='col-sm-6'>
-            <select>
+            <select onChange={this.changeNumberValue.bind(this, 'nbrAppartment')}>
               {buildingTypeList.map((building, i) => {
                   const { Title, Appartment} = building
                   return (<option key={i} value={Appartment}>{Title}</option>)
               })}
             </select>
           </div>
-          <div className='col-sm-4'>Selection of the building</div>
+          <div className='col-sm-4'>App: {nbrAppartment}</div>
         </div>
 
         <div className='row'>
@@ -80,9 +76,10 @@ class Inputcontroller extends React.Component {
         <div className='col-sm-2'>House Value: </div>
         <div className='col-sm-6'>
           <input
+            key='houseValue'
             type='number'
             defaultValue={houseValue}
-            onChange={this.changeHouseValue.bind(this)}/>
+            onChange={this.changeValue.bind(this, 'houseValue')}/>
         </div>
         <div className='col-sm-4'>{convertToCurrency(houseValue)} $ </div>
         </div>
@@ -91,9 +88,10 @@ class Inputcontroller extends React.Component {
         <div className='col-sm-2'>Down Payment %: </div>
         <div className='col-sm-6'>
           <input
+            key='downPayment'
             type='number'
             defaultValue={downPayment}
-            onChange={this.changedownPayment.bind(this)}/>
+            onChange={this.changeValue.bind(this, 'downPayment')}/>
         </div>
         <div className='col-sm-4'>{convertToCurrency(houseValue*downPayment/100)} $ </div>
         </div>
@@ -101,14 +99,19 @@ class Inputcontroller extends React.Component {
         <div className='row'>
         <div className='col-sm-2'>Interest Rate %: </div>
         <div className='col-sm-6'>
-          <select onChange={this.changeIntRate.bind(this)}>
+          <select onChange={this.changeNumberValue.bind(this, 'intRate')}>
             {interestRate.map((intRate, i) => {
                 const { name, latestIntRate} = intRate
                 return (<option key={i} value={latestIntRate}>{name} - {latestIntRate}</option>)
             })}
           </select>
+          <input
+            key='intRate'
+            type='number'
+            value={intRate}
+            onChange={this.changeNumberValue.bind(this, 'intRate')}/>
         </div>
-        <div className='col-sm-4'>{this.state.intRate}</div>
+        <div className='col-sm-4'>{intRate}</div>
         </div>
 
         <div className='row'>
@@ -118,18 +121,25 @@ class Inputcontroller extends React.Component {
         </div>
 
         <div className='row'>
-        <div className='col-sm-2'>Fix expenses % (taxes):</div>
+        <div className='col-sm-2'>Fix expenses % (taxes, repair, fee):</div>
         <div className='col-sm-6'>
           <input
+            key='fixExpenses'
             type='number'
             defaultValue={fixExpenses}
-            onChange={this.changeFixExpenses.bind(this)}/></div>
+            onChange={this.changeValue.bind(this, 'fixExpenses')}/></div>
         <div className='col-sm-4'>{fixExpenses} % or {convertToCurrency(houseValue*fixExpenses/100)}$/year</div>
         </div>
 
         <div className='row'>
         <div className='col-sm-2'>Welcome taxes Calculation display</div>
         <div className='col-sm-10'></div>
+        </div>
+
+        <div className='row text-center'>
+          <div className='col-sm-12'>
+            <button className='btn btn-lg btn-success'>Calculate</button>
+          </div>
         </div>
       </div>
    );
