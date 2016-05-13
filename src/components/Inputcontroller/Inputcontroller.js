@@ -21,12 +21,17 @@ class Inputcontroller extends React.Component {
     super(props)
     this.state = {
       loading:false,
-      mortgageValue: 200000
+      mortgageValue: 200000,
+      intRate: ''
     }
   }
   changeMortgageValue (event) {
-    console.log(this);
+    // This set the Mortgage value
     this.setState({mortgageValue: event.target.value});
+  }
+  changeIntRate (event) {
+    // This Set the Interest Rate
+    this.setState({intRate: event.target.value});
   }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
@@ -56,7 +61,15 @@ class Inputcontroller extends React.Component {
             onChange={this.changeMortgageValue.bind(this)}/>
             {this.state.mortgageValue}
         </div>
-        <div>Selec Mortgage % value</div>
+        <div>Selec Mortgage %
+          <select onChange={this.changeIntRate.bind(this)}>
+            {interestRate.map((intRate, i) => {
+                const { name, latestIntRate} = intRate
+                return (<option key={i} value={latestIntRate}>{name} - {latestIntRate}</option>)
+            })}
+          </select>
+          {this.state.intRate}
+        </div>
         <div><button>Estimate Rent per block</button> rent: (Value Here)</div>
         <div>Fix expenses % taxes</div>
         <div>Welcome taxes Calculation display</div>
@@ -86,7 +99,7 @@ class SelectNeiborhood extends React.Component {
       });
   }
   onSuggestionSelected(event, {suggestion}) {
-    console.log('Autosuggest was selected on code:', suggestion.Code);
+    window.console.log('Autosuggest was selected on code:', suggestion.Code);
   }
   getSuggestions(value) {
     const escapedValue = escapeRegexCharacters(value.trim());

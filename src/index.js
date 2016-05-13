@@ -11,7 +11,7 @@ import Errorpage from './components/Error/Errorpage';
 var fetchedData = {
 	buildingTypeList: [{'Title':'House','Appartment':1,'RevenuPerApp':0},{'Title':'Duplex','Appartment':2,'RevenuPerApp':0},{'Title':'Triplex','Appartment':3,'RevenuPerApp':0},{'Title':'Fourplex','Appartment':4,'RevenuPerApp':0}],
 	neiborhoodlist: [{'Region':'Paradise','State':'Las Vegas','Metro':'NV','County':'Las Vegas','City':'Clark','Code':'00001'},{'Region':'Upper West Side','State':'New York','Metro':'NY','County':'New York','City':'New York','Code':'00002'},{'Region':'South Los Angeles','State':'Los Angeles','Metro':'CA','County':'Los Angeles','City':'Los Angeles','Code':'00003'}],
-	interestRate:[]
+	interestRate: [{'DB':'5US','name':'5/1-Year Adjustable Rate Mortgage Average in the United States','latestIntRate':2.78},{'DB':'15US','name':'15-Year Fixed Rate Mortgage Average in the United States','latestIntRate':2.81},{'DB':'30US','name':'30-Year Fixed Rate Mortgage Average in the United States','latestIntRate':3.57},{'DB':'WRMORTG','name':'30-Year Conventional Mortgage Rate','latestIntRate':3.61}]
 };
 
 
