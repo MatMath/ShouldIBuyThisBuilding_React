@@ -34,11 +34,10 @@ class Inputcontroller extends React.Component {
       intRate: parseFloat(this.props.interestRate[0].latestIntRate),
       fixExpenses: 1.75,
       nbrAppartment: 1,
-      neiborhood: {
-        name: '',
-        code: ''
-      }
+      neiborhoodName: '',
+      neiborhoodCode: ''
     }
+    this.neiborhoodSelected=this.neiborhoodSelected.bind(this);
   }
   changeValue (key, event) {
     // This set the value of the proper Key.
@@ -47,6 +46,13 @@ class Inputcontroller extends React.Component {
   changeNumberValue (key, event) {
     // This set the value of the proper Key.
     this.setState({[key]: parseFloat(event.target.value)});
+  }
+  neiborhoodSelected (returnedValue) {
+    console.log('SELECTION MADE!!!', returnedValue.name, returnedValue.code);
+    this.setState({
+      neiborhoodName: returnedValue.name,
+      neiborhoodCode: returnedValue.code
+    });
   }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
@@ -68,8 +74,8 @@ class Inputcontroller extends React.Component {
 
         <div className='row'>
         <div className='col-sm-2'>Neiborhood:</div>
-        <div className='col-sm-6'><SelectNeiborhood neiborhoodlist={neiborhoodlist} /></div>
-        <div className='col-sm-4'>Result is: How to extract it???</div>
+        <div className='col-sm-6'><SelectNeiborhood neiborhoodlist={neiborhoodlist} neiborhoodSelected={this.neiborhoodSelected}/></div>
+        <div className='col-sm-4'>{this.state.neiborhoodName} with #{this.state.neiborhoodCode}</div>
         </div>
 
         <div className='row'>
@@ -128,7 +134,7 @@ class Inputcontroller extends React.Component {
             type='number'
             defaultValue={fixExpenses}
             onChange={this.changeValue.bind(this, 'fixExpenses')}/></div>
-        <div className='col-sm-4'>{fixExpenses} % or {convertToCurrency(houseValue*fixExpenses/100)}$/year</div>
+        <div className='col-sm-4'>{parseFloat(fixExpenses).toFixed(2)} % or {convertToCurrency(houseValue*fixExpenses/100)}$/year</div>
         </div>
 
         <div className='row'>
@@ -155,6 +161,7 @@ class SelectNeiborhood extends React.Component {
     }
     this.onChange = this.onChange.bind(this);
     this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
+    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
   }
   onChange(event, {newValue}) {
       this.setState({
@@ -167,7 +174,12 @@ class SelectNeiborhood extends React.Component {
       });
   }
   onSuggestionSelected(event, {suggestion}) {
-    window.console.log('Autosuggest was selected on code:', suggestion.Code);
+    // This is what pass the argument to the Higher level function.
+    // Even if it is decoupled, the higher level function still receive only name and code.
+    this.props.neiborhoodSelected({
+      name: suggestion.City, 
+      code: suggestion.Code
+    });
   }
   getSuggestions(value) {
     const escapedValue = escapeRegexCharacters(value.trim());
