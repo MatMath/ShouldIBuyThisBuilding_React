@@ -33,11 +33,17 @@ class Inputcontroller extends React.Component {
       downPayment: 10,
       intRate: parseFloat(this.props.interestRate[0].latestIntRate),
       fixExpenses: 1.75,
+      oneTimeExpenses: 1,
       nbrAppartment: 1,
+      averageRent:0,
       neiborhoodName: '',
-      neiborhoodCode: ''
+      neiborhoodCode: '',
+      isDisabled: true,
+      nbrYears: 25
     }
-    this.neiborhoodSelected=this.neiborhoodSelected.bind(this);
+    this.neiborhoodSelected = this.neiborhoodSelected.bind(this);
+    this.checkTheClass = this.checkTheClass.bind(this);
+    this.returnThisForCalculation = this.returnThisForCalculation.bind(this);
   }
   changeValue (key, event) {
     // This set the value of the proper Key.
@@ -48,15 +54,25 @@ class Inputcontroller extends React.Component {
     this.setState({[key]: parseFloat(event.target.value)});
   }
   neiborhoodSelected (returnedValue) {
-    console.log('SELECTION MADE!!!', returnedValue.name, returnedValue.code);
     this.setState({
       neiborhoodName: returnedValue.name,
       neiborhoodCode: returnedValue.code
     });
+    this.checkTheClass();
+  }
+  checkTheClass() {
+    if (this.state.neiborhoodName && this.state.neiborhoodCode) {
+      // This make the button to make the calculation possible.
+      // Yes this could be automaticl but I play with even and states
+      this.setState({isDisabled: false});
+    }
+  }
+  returnThisForCalculation() {
+    this.props.extractParamForCalculation(this.state);
   }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
-    const {houseValue, downPayment, fixExpenses, intRate, nbrAppartment} = this.state;
+    const {houseValue, downPayment, fixExpenses, intRate, nbrYears, nbrAppartment, oneTimeExpenses, isDisabled} = this.state;
     return (
       <div>
         <div className='row'>
@@ -111,13 +127,24 @@ class Inputcontroller extends React.Component {
                 return (<option key={i} value={latestIntRate}>{name} - {latestIntRate}</option>)
             })}
           </select>
-          <input
+        </div>
+        <div className='col-sm-4'><input
             key='intRate'
             type='number'
             value={intRate}
             onChange={this.changeNumberValue.bind(this, 'intRate')}/>
         </div>
-        <div className='col-sm-4'>{intRate}</div>
+        </div>
+
+        <div className='row'>
+        <div className='col-sm-2'>Nbr of Years</div>
+        <div className='col-sm-6'>
+          <input
+            key='nbrYears'
+            type='number'
+            defaultValue={nbrYears}
+            onChange={this.changeValue.bind(this, 'nbrYears')}/></div>
+        <div className='col-sm-4'>{nbrYears}</div>
         </div>
 
         <div className='row'>
@@ -139,12 +166,28 @@ class Inputcontroller extends React.Component {
 
         <div className='row'>
         <div className='col-sm-2'>Welcome taxes Calculation display</div>
+        <div className='col-sm-6'>
+          <input
+            key='oneTimeExpenses'
+            type='number'
+            defaultValue={oneTimeExpenses}
+            onChange={this.changeValue.bind(this, 'oneTimeExpenses')}/></div>
+        <div className='col-sm-4'>{parseFloat(oneTimeExpenses).toFixed(2)} % or {convertToCurrency(houseValue*oneTimeExpenses/100)}$</div>
+        </div>
+
+        <div className='row'>
+        <div className='col-sm-2'></div>
         <div className='col-sm-10'></div>
         </div>
 
         <div className='row text-center'>
           <div className='col-sm-12'>
-            <button className='btn btn-lg btn-success'>Calculate</button>
+            <button
+              className='btn btn-lg btn-success'
+              disabled={isDisabled}
+              onClick={this.returnThisForCalculation}>
+              Calculate
+            </button>
           </div>
         </div>
       </div>
@@ -177,7 +220,7 @@ class SelectNeiborhood extends React.Component {
     // This is what pass the argument to the Higher level function.
     // Even if it is decoupled, the higher level function still receive only name and code.
     this.props.neiborhoodSelected({
-      name: suggestion.City, 
+      name: suggestion.City,
       code: suggestion.Code
     });
   }
@@ -204,7 +247,6 @@ class SelectNeiborhood extends React.Component {
              renderSuggestion={renderSuggestion}
              inputProps={inputProps}
              onSuggestionSelected={this.onSuggestionSelected} />
-             Result is: {value}
       </div>
    );
   }

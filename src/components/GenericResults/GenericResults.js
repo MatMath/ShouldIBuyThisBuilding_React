@@ -7,15 +7,31 @@ require('./GenericResults.css');
 // and to export withStyles(GenericResults, cssImportedFile)
 
 class GenericResults extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			loading: true
+		}
+	}
 	render() {
+		console.log('this is props:', this.props.calcParam);
+		const {houseValue, downPayment, fixExpenses, nbrAppartment, averageRent, PMT} = this.props.calcParam;
 	    return (
-	      <div>
-	      	<hr />
-	        <span className='makeItRed'>Mortgage total</span>
-	        <span>Total rent income</span>
-	        <span>Total safety</span>
-	        <span>Total spending</span>
-	      </div>
+	    	<div>
+		      <div className='row'>
+		        <div className='col-sm-3'>Mortgage total</div>
+		        <div className='col-sm-3 bg-info'>{parseInt(houseValue*(1 - downPayment/100))}$</div>
+		        <div className='col-sm-3'>Down Payment</div>
+		        <div className='col-sm-3 bg-info'>{parseInt(downPayment*houseValue/100)}$</div>
+		       </div>
+
+		       <div classname='row'>
+		        <div className='col-sm-3'>PMT</div>
+		        <div className='col-sm-3 bg-info'>{PMT}$</div>
+		        <div className='col-sm-3'>PMT after fix expenses and revenue</div>
+		        <div className='col-sm-3 bg-info'>{parseInt(PMT)-parseInt(nbrAppartment)*parseInt(averageRent)}$</div>
+		      </div>
+		    </div>
 	   );
 	}
 }
