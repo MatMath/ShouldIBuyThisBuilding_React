@@ -101,7 +101,7 @@ class Inputcontroller extends React.Component {
             key='houseValue'
             type='number'
             defaultValue={houseValue}
-            onChange={this.changeValue.bind(this, 'houseValue')}/>
+            onChange={this.changeNumberValue.bind(this, 'houseValue')}/>
         </div>
         <div className='col-sm-4'>{convertToCurrency(houseValue)} $ </div>
         </div>
@@ -113,7 +113,7 @@ class Inputcontroller extends React.Component {
             key='downPayment'
             type='number'
             defaultValue={downPayment}
-            onChange={this.changeValue.bind(this, 'downPayment')}/>
+            onChange={this.changeNumberValue.bind(this, 'downPayment')}/>
         </div>
         <div className='col-sm-4'>{convertToCurrency(houseValue*downPayment/100)} $ </div>
         </div>
@@ -143,7 +143,7 @@ class Inputcontroller extends React.Component {
             key='nbrYears'
             type='number'
             defaultValue={nbrYears}
-            onChange={this.changeValue.bind(this, 'nbrYears')}/></div>
+            onChange={this.changeNumberValue.bind(this, 'nbrYears')}/></div>
         <div className='col-sm-4'>{nbrYears}</div>
         </div>
 
@@ -160,7 +160,7 @@ class Inputcontroller extends React.Component {
             key='fixExpenses'
             type='number'
             defaultValue={fixExpenses}
-            onChange={this.changeValue.bind(this, 'fixExpenses')}/></div>
+            onChange={this.changeNumberValue.bind(this, 'fixExpenses')}/></div>
         <div className='col-sm-4'>{parseFloat(fixExpenses).toFixed(2)} % or {convertToCurrency(houseValue*fixExpenses/100)}$/year</div>
         </div>
 
@@ -171,7 +171,7 @@ class Inputcontroller extends React.Component {
             key='oneTimeExpenses'
             type='number'
             defaultValue={oneTimeExpenses}
-            onChange={this.changeValue.bind(this, 'oneTimeExpenses')}/></div>
+            onChange={this.changeNumberValue.bind(this, 'oneTimeExpenses')}/></div>
         <div className='col-sm-4'>{parseFloat(oneTimeExpenses).toFixed(2)} % or {convertToCurrency(houseValue*oneTimeExpenses/100)}$</div>
         </div>
 
