@@ -78,7 +78,16 @@ class Inputcontroller extends React.Component {
               })}
             </select>
           </div>
-          <div className='col-sm-4'>App: {nbrAppartment}</div>
+          <div className='col-sm-4'>
+            <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-addon"># Rented</div>
+                  <input type="number" className="form-control"
+                    value={nbrAppartment}
+                    onChange={this.changeNumberValue.bind(this, 'nbrAppartment')} />
+                </div>
+            </div>
+          </div>
         </div>
 
         <div className='row'>

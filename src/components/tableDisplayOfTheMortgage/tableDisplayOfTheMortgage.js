@@ -1,55 +1,74 @@
 import React from 'react';
 import {convertToCurrency} from '../utils';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+
+function format(cell, row){
+  return  convertToCurrency(cell);
+}
 
 class TableDisplayOfTheMortgage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			loading: false
+			showFaq: false,
 		}
+		this.showHideFaq = this.showHideFaq.bind(this);
+	}
+	showHideFaq() {
+		this.setState({showFaq: !this.state.showFaq});
 	}
 	render() {
 		const {mortgateTable} = this.props;
 		// console.table(mortgateTable);
 		return (
 			<div>
-				<div> FAQ (click expand/close)
-					<div>Why House value increase?
-						<div>The mortgage will stay stable, but the house and land will gain value over time if we do minimal reparation on it. (Expenses)</div>
-					</div>
-					<div>Why is the rent increasing?
-						<div>The mortgage will stay stable, but the cost of life increase so we expect the rent to be higher in 10 year than now.</div>
-					</div>
-					<div>Why is the expenses increase?
-						<div>The expenses are a proportion of the cost of the house. More the price of the house increase, more the cost of material & labor increase. Taxes tend to increases over time also.</div>
-					</div>
+				<div className='text-center text-lg'>
+					<h2 onClick={this.showHideFaq}>Table FAQ</h2>
 				</div>
-				<div className="row">
-					<div className="col-xs-2">House Value</div>
-					<div className="col-xs-2">Mortgage</div>
-					<div className="col-xs-2">Rent</div>
-					<div className="col-xs-2">Interest</div>
-					<div className="col-xs-2">Expenses</div>
-					<div className="col-xs-2">Pocket pmt</div>
+				<div> 
+					{ this.state.showFaq ? <Faq /> : null }
 				</div>
-				/* Make a flexible tabke here, dont display all the data, but only 5 item at the time. */
-				{mortgateTable.map((month, i) => {
-                  const {period, houseValue, mortgateValue, rentIncome, interest, fixExpenses, totalPmt} = month
-                  return (
-					<div className="row" key={i}>
-						<div className="col-xs-2">{period}. {convertToCurrency(houseValue)}</div>
-						<div className="col-xs-2">{convertToCurrency(mortgateValue)}</div>
-						<div className="col-xs-2">{convertToCurrency(rentIncome)}</div>
-						<div className="col-xs-2">{convertToCurrency(interest)}</div>
-						<div className="col-xs-2">{convertToCurrency(fixExpenses)}</div>
-						<div className="col-xs-2">{convertToCurrency(totalPmt)}</div>
-					</div>
-                  )
-              })}
+				<BootstrapTable
+					data={mortgateTable}
+					striped={true}
+					height={300}>
+				  <TableHeaderColumn dataField="period" isKey={true} dataSort={true}>Month</TableHeaderColumn>
+				  <TableHeaderColumn dataField="houseValue" dataSort={true} dataFormat={format}>house Value</TableHeaderColumn>
+				  <TableHeaderColumn dataField="mortgateValue" dataSort={true} dataFormat={format}>Mortgage</TableHeaderColumn>
+				  <TableHeaderColumn dataField="rentIncome" dataSort={true} dataFormat={format}>Rent</TableHeaderColumn>
+				  <TableHeaderColumn dataField="interest" dataSort={true} dataFormat={format}>Interest</TableHeaderColumn>
+				  <TableHeaderColumn dataField="fixExpenses" dataSort={true} dataFormat={format}>Expenses</TableHeaderColumn>
+				  <TableHeaderColumn dataField="totalPmt" dataSort={true} dataFormat={format}>Pocket PMT</TableHeaderColumn>
+				</BootstrapTable>
 			</div>
 		)
 	}
 
+}
+
+class Faq extends React.Component {
+	constructor(props) {
+		super(props)
+	}
+	render() {
+		return(
+			<div>
+				<div className='row'>
+					<div className='col-xs-2'><strong>Why House value increase?</strong></div>
+					<div className='col-xs-10'>The mortgage will stay stable, but the house and land will gain value over time if we do minimal reparation on it. (Expenses)</div>
+				</div>
+				<div className='row'>
+					<div className='col-xs-2'><strong>Why is the rent increasing?</strong></div>
+					<div className='col-xs-10'>The mortgage will stay stable, but the cost of life increase so we expect the rent to be higher in 10 year than now.</div>
+				</div>
+				<div className='row'>
+					<div className='col-xs-2'><strong>Why is the expenses increase?</strong></div>
+					<div className='col-xs-10'>The expenses are a proportion of the cost of the house. More the price of the house increase, more the cost of material & labor increase. Taxes tend to increases over time also.</div>
+				</div>
+				<br />
+			</div>
+		);
+	}
 }
 
 export default TableDisplayOfTheMortgage;
