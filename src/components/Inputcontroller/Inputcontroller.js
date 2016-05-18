@@ -238,7 +238,6 @@ class Inputcontroller extends React.Component {
           <div className='col-sm-12'>
             <button
               className='btn btn-lg btn-success'
-              disabled={isDisabled}
               onClick={this.returnThisForCalculation}>
               Calculate
             </button>

@@ -15,7 +15,7 @@ class GenericResults extends React.Component {
 		}
 	}
 	render() {
-		const {mortgage, downPayment, pmt} = this.props.calcParam;
+		const {mortgage, downPayment, pmt, currentValue} = this.props.calcParam;
 	    return (
 	    	<div>
 		      <div className='row'>
@@ -25,6 +25,10 @@ class GenericResults extends React.Component {
 		        <div className='col-sm-2 bg-info'>{convertToCurrency(downPayment)}$</div>
 		        <div className='col-sm-2'>PMT</div>
 		        <div className='col-sm-2 bg-info'>{convertToCurrency(pmt)}$</div>
+		      </div>
+		      <div className='row'>
+		      	<div className='col-sm-2'> Current Value: </div>
+		      	<div className='col-sm-2 bg-info'>{convertToCurrency(currentValue)}$</div>
 		      </div>
 		    </div>
 	   );

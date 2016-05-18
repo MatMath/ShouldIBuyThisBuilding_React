@@ -48,6 +48,25 @@ function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt) {
   }
 }
 
+function getInvestmentReturnValue(arrayToReduce, reducingFactor) {
+  // How it work: We take everything we pay over time and make it as today value. 
+  // We take how much we can sell the building at the end and transpose it as today value. 
+  // The reducingFactor need to match the current period. 
+  let totalPaidInCurrentValue = arrayToReduce.reduce(function(previousValue, currentValue) {
+    let oldValue = previousValue.totalPmt;
+    let newValue = currentValue.totalPmt * Math.pow((1/reducingFactor),currentValue.period)
+    console.log(oldValue, newValue);
+    return {
+      totalPmt: oldValue+newValue,
+      period: previousValue.period
+    };
+  });
+
+  let lastItem = arrayToReduce.pop();
+  let totalReceiveInTheFuture = lastItem.houseValue * Math.pow((1/reducingFactor),lastItem.period);
+  return totalReceiveInTheFuture - totalPaidInCurrentValue.totalPmt;
+}
+
 class AppComponent extends React.Component {
   constructor (props) {
   	super(props)
@@ -75,12 +94,6 @@ class AppComponent extends React.Component {
       let pmt = calculateThePV(principal, monthIntRate, nbrPer);
       let rentIncome = importantParam.nbrAppartment * importantParam.averageRent;
 
-      let calcParam = {
-        mortgage: principal,
-        downPayment: importantParam.houseValue*(importantParam.downPayment - importantParam.oneTimeExpenses)/100,
-        pmt: pmt
-      };
-
       mortgateTable = [{
         period: 0,
         houseValue: importantParam.houseValue,
@@ -93,8 +106,15 @@ class AppComponent extends React.Component {
       }];
       mortgateTable = buildMortgageTable(mortgateTable, fixExpRatio, monthIntRate, pmt);
       mortgateTable.shift(); //Removign the initial element since they will be display as a summary somewhere else.
+
       // calcParam In the State = Pollute the state with useless data.
       // Outside the state = will not render.
+      let calcParam = {
+        mortgage: principal,
+        downPayment: importantParam.houseValue*(importantParam.downPayment - importantParam.oneTimeExpenses)/100,
+        pmt: pmt,
+        currentValue: getInvestmentReturnValue(mortgateTable, 1.0058)
+      };
       this.setState({calcParam: calcParam});
     }
   }
