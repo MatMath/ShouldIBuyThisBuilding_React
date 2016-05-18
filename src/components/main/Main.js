@@ -4,20 +4,7 @@ require('styles/App.css');
 import React from 'react';
 import Inputcontroller from '../Inputcontroller/Inputcontroller';
 import GenericResults from '../GenericResults/GenericResults';
-
-// This is Bad since it is outside a scope and just laying there.
-// In the State = Pollute the state with useless data.
-// Outside the state = will not render.
-var calcParam = {
-  houseValue: 500000,
-  downPayment: 10,
-  intRate: 0,
-  fixExpenses: 1.75,
-  oneTimeExpenses: 1,
-  nbrAppartment: 1,
-  averageRent:0,
-  pmt:0
-};
+import TableDisplayOfTheMortgage from '../tableDisplayOfTheMortgage/tableDisplayOfTheMortgage';
 
 // The House value will increase with time, that mean:
 // The Fix expenses will increase (Taxes, renovation).
@@ -38,12 +25,13 @@ function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt) {
   if (perr%12 === 0) {
     // Every year we increase the rent of 1.5% --> To extract from Quandl maybe.
     rentIncome *= 1.015;
+    houseValue *= 1.02;
   }
   mortgateValue = mortgateValue * (1+monthIntRate) - pmt;
   //HouseValue increase could be extracted historically from Quandl
   const itemToPush = {
     period: perr,
-    houseValue: houseValue * 1.02,
+    houseValue: houseValue,
     mortgateValue : mortgateValue,
     pmt: pmt,
     interest: mortgateValue * monthIntRate,
@@ -56,7 +44,7 @@ function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt) {
     tablePmt.push(itemToPush);
     return buildMortgageTable(tablePmt, fixExpRatio, monthIntRate, pmt);
   } else {
-    console.table(tablePmt);
+    return tablePmt;
   }
 }
 
@@ -65,7 +53,12 @@ class AppComponent extends React.Component {
   	super(props)
   	// note: If one element of the state change the Component redraw.
   	this.state = {
-  		loading:false
+  		loading:false,
+      calcParam: {
+        mortgage: 0,
+        downPayment: 0,
+        pmt: 0
+      }
   	}
     this.extractParamForCalculation = this.extractParamForCalculation.bind(this);
   }
@@ -73,7 +66,6 @@ class AppComponent extends React.Component {
     if (importantParam) {
       // In the State = Pollute the state with useless data.
       // Outside the state = will not render.
-      calcParam = importantParam;
       // Extract the Payment
       let nbrPmtPerYear = 12;
       let principal = importantParam.houseValue * (1- importantParam.downPayment/100 - importantParam.oneTimeExpenses/100);
@@ -82,6 +74,12 @@ class AppComponent extends React.Component {
       let nbrPer = importantParam.nbrYears * nbrPmtPerYear;
       let pmt = calculateThePV(principal, monthIntRate, nbrPer);
       let rentIncome = importantParam.nbrAppartment * importantParam.averageRent;
+
+      let calcParam = {
+        mortgage: principal,
+        downPayment: importantParam.houseValue*(importantParam.downPayment - importantParam.oneTimeExpenses)/100,
+        pmt: pmt
+      };
 
       mortgateTable = [{
         period: 0,
@@ -94,7 +92,10 @@ class AppComponent extends React.Component {
         totalPmt: 0
       }];
       mortgateTable = buildMortgageTable(mortgateTable, fixExpRatio, monthIntRate, pmt);
-
+      mortgateTable.shift(); //Removign the initial element since they will be display as a summary somewhere else.
+      // calcParam In the State = Pollute the state with useless data.
+      // Outside the state = will not render.
+      this.setState({calcParam: calcParam});
     }
   }
 
@@ -107,8 +108,8 @@ class AppComponent extends React.Component {
           neiborhoodlist={neiborhoodlist}
           interestRate={interestRate}
           extractParamForCalculation={this.extractParamForCalculation}/>
-  			<GenericResults calcParam={calcParam} />
-  			<div>Collapsable table of the expenses by months? year?</div>
+  			<GenericResults calcParam={this.state.calcParam} />
+        <TableDisplayOfTheMortgage mortgateTable={mortgateTable}/>
   			<div>d3 Graph of the result expected</div>
       </div>
     );

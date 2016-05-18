@@ -1,6 +1,7 @@
 // From what is display and inputed before, this is to display the summary of the calculated data.
 import React from 'react';
 require('./GenericResults.css');
+import {convertToCurrency} from '../utils';
 
 // Alternative for CSS would be to use withStyles but that add a library.
 // import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -10,26 +11,20 @@ class GenericResults extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			loading: true
+			pmt: this.props.calcParam.pmt
 		}
 	}
 	render() {
-		console.log('this is props:', this.props.calcParam);
-		const {houseValue, downPayment, fixExpenses, nbrAppartment, averageRent, PMT} = this.props.calcParam;
+		const {mortgage, downPayment, pmt} = this.props.calcParam;
 	    return (
 	    	<div>
 		      <div className='row'>
-		        <div className='col-sm-3'>Mortgage total</div>
-		        <div className='col-sm-3 bg-info'>{parseInt(houseValue*(1 - downPayment/100))}$</div>
-		        <div className='col-sm-3'>Down Payment</div>
-		        <div className='col-sm-3 bg-info'>{parseInt(downPayment*houseValue/100)}$</div>
-		       </div>
-
-		       <div classname='row'>
-		        <div className='col-sm-3'>PMT</div>
-		        <div className='col-sm-3 bg-info'>{PMT}$</div>
-		        <div className='col-sm-3'>PMT after fix expenses and revenue</div>
-		        <div className='col-sm-3 bg-info'>{parseInt(PMT)-parseInt(nbrAppartment)*parseInt(averageRent)}$</div>
+		        <div className='col-sm-2'>Mortgage total</div>
+		        <div className='col-sm-2 bg-info'>{convertToCurrency(mortgage)}$</div>
+		        <div className='col-sm-2'>Down Payment after expenses</div>
+		        <div className='col-sm-2 bg-info'>{convertToCurrency(downPayment)}$</div>
+		        <div className='col-sm-2'>PMT</div>
+		        <div className='col-sm-2 bg-info'>{convertToCurrency(pmt)}$</div>
 		      </div>
 		    </div>
 	   );

@@ -1,5 +1,7 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
+import {convertToCurrency} from '../utils';
+
 require('./Inputcontroller.css');
 
 function escapeRegexCharacters(str) {
@@ -15,15 +17,6 @@ function renderSuggestion(suggestion) {
     <span>{suggestion.City}, {suggestion.Code}</span>
   );
 }
-function convertToCurrency(valueToConvert) {
-    // http://stackoverflow.com/questions/149055/how-can-i-format-numbers-as-money-in-javascript
-    let returnNumber = parseFloat(valueToConvert);
-    if (returnNumber) {
-      return returnNumber.toFixed(0).replace(/./g, function(c, i, a) {
-        return i && c !== '.' && ((a.length - i) % 3 === 0) ? ',' + c : c;
-      });
-    }
-}
 
 class Inputcontroller extends React.Component {
   constructor (props) {
@@ -33,13 +26,13 @@ class Inputcontroller extends React.Component {
       downPayment: 10,
       intRate: parseFloat(this.props.interestRate[0].latestIntRate),
       fixExpenses: 1.75,
-      oneTimeExpenses: 1,
+      oneTimeExpenses: 1.25,
       nbrAppartment: 1,
-      averageRent:0,
+      averageRent:1000,
       neiborhoodName: '',
       neiborhoodCode: '',
       isDisabled: true,
-      nbrYears: 25
+      nbrYears: 5
     }
     this.neiborhoodSelected = this.neiborhoodSelected.bind(this);
     this.checkTheClass = this.checkTheClass.bind(this);
@@ -165,7 +158,7 @@ class Inputcontroller extends React.Component {
         </div>
 
         <div className='row'>
-        <div className='col-sm-2'>Welcome taxes Calculation display</div>
+        <div className='col-sm-2'>Welcome taxes & moving in</div>
         <div className='col-sm-6'>
           <input
             key='oneTimeExpenses'

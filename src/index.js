@@ -18,7 +18,7 @@ var fetchedData = {
 // Render the main component into the dom
 var loadedExternalRessources = function() {
 	// Asynch Fetch, Request Or HTTP or jsonP Or whatever here asynch to get the external ressource from the server.
-	// Trying Fetch Asynch, Request Ajax HTTP call, nothing work at the moment. 
+	// Trying Fetch Asynch, Request Ajax HTTP call, nothing work at the moment.
 	// This should load asynch the Building, and other components and set the base data.
 	// buildingTypeList from http://192.168.99.100:49160/buildings/list.json
 	// neiborhoodlist from http://192.168.99.100:49160/medRentOfArea/hood_codes.json
