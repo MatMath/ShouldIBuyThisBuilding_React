@@ -1,6 +1,8 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
+import {ButtonToolbar, DropdownButton, MenuItem} from 'react-bootstrap';
 import {convertToCurrency} from '../utils';
+
 
 require('./Inputcontroller.css');
 
@@ -37,6 +39,8 @@ class Inputcontroller extends React.Component {
     this.neiborhoodSelected = this.neiborhoodSelected.bind(this);
     this.checkTheClass = this.checkTheClass.bind(this);
     this.returnThisForCalculation = this.returnThisForCalculation.bind(this);
+    this.customClickOnBootstrapButtons = this.customClickOnBootstrapButtons.bind(this);
+    this.dropddownButtonSelectIntRate = this.dropddownButtonSelectIntRate.bind(this);
   }
   changeValue (key, event) {
     // This set the value of the proper Key.
@@ -63,22 +67,31 @@ class Inputcontroller extends React.Component {
   returnThisForCalculation() {
     this.props.extractParamForCalculation(this.state);
   }
+  customClickOnBootstrapButtons(eventKey, event) {
+    this.setState({nbrAppartment: parseFloat(event.target.value)});
+  }
+  dropddownButtonSelectIntRate(eventKey, event) {
+    // This is stupid, we should have 1 function that do ALL, but the onChange={this.changeNumberValue.bind(this, 'X')} dosent work! It is stupid, I should be able to tell them at least what key to target.
+    this.setState({intRate: parseFloat(event.target.value)});
+  }
+  
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
     const {houseValue, downPayment, fixExpenses, intRate, nbrYears, averageRent, nbrAppartment, oneTimeExpenses, isDisabled} = this.state;
     return (
       <div>
         <div className='row'>
-          <div className='col-sm-2'>Building Type: </div>
-          <div className='col-sm-3'>
-            <select onChange={this.changeNumberValue.bind(this, 'nbrAppartment')}>
-              {buildingTypeList.map((building, i) => {
-                  const { Title, Appartment} = building
-                  return (<option key={i} value={Appartment}>{Title}</option>)
-              })}
-            </select>
+          <div className='col-sm-2'>
+          <ButtonToolbar>
+              <DropdownButton key="building" onSelect={this.customClickOnBootstrapButtons} title="Type of Building" id="dropdown-building">
+                {buildingTypeList.map((building, i) => {
+                    const { Title, Appartment} = building
+                    return (<MenuItem eventKey={i} value={Appartment}>{Title}</MenuItem>)
+                })}
+              </DropdownButton>
+            </ButtonToolbar>
           </div>
-          <div className='col-sm-3'>
+          <div className='col-sm-6'>
             <div className="form-group">
                 <div className="input-group">
                   <div className="input-group-addon"># Rented</div>
@@ -130,8 +143,17 @@ class Inputcontroller extends React.Component {
         </div>
 
         <div className='row'>
-        <div className='col-sm-2'>Interest Rate: </div>
         <div className='col-sm-2'>
+          <ButtonToolbar>
+            <DropdownButton onSelect={this.dropddownButtonSelectIntRate} title="Interest Rate" id="dropdown-IntRate">
+              {interestRate.map((intRate, i) => {
+                  const { name, latestIntRate} = intRate
+                  return (<MenuItem eventKey={i} value={latestIntRate}>{name} - {latestIntRate}</MenuItem>)
+              })}
+            </DropdownButton>
+          </ButtonToolbar>
+        </div>
+        <div className='col-sm-6'>
           <div className="form-group">
               <div className="input-group">
                 <div className="input-group-addon">%</div>
@@ -140,14 +162,6 @@ class Inputcontroller extends React.Component {
                   onChange={this.changeNumberValue.bind(this, 'intRate')} />
               </div>
           </div>
-        </div>
-        <div className='col-sm-4'>
-          <select onChange={this.changeNumberValue.bind(this, 'intRate')}>
-            {interestRate.map((intRate, i) => {
-                const { name, latestIntRate} = intRate
-                return (<option key={i} value={latestIntRate}>{name} - {latestIntRate}</option>)
-            })}
-          </select>
         </div>
         <div className='col-sm-4'>input a sidebar control</div>
         </div>

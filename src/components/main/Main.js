@@ -109,7 +109,7 @@ class AppComponent extends React.Component {
           interestRate={interestRate}
           extractParamForCalculation={this.extractParamForCalculation}/>
   			<GenericResults calcParam={this.state.calcParam} />
-        <TableDisplayOfTheMortgage mortgateTable={mortgateTable}/>
+        { mortgateTable.length ? <TableDisplayOfTheMortgage mortgateTable={mortgateTable}/> : null }
   			<div>d3 Graph of the result expected</div>
       </div>
     );
