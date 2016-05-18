@@ -68,7 +68,7 @@ class AppComponent extends React.Component {
       // Outside the state = will not render.
       // Extract the Payment
       let nbrPmtPerYear = 12;
-      let principal = importantParam.houseValue * (1- importantParam.downPayment/100 - importantParam.oneTimeExpenses/100);
+      let principal = importantParam.houseValue * (1- (importantParam.downPayment/100 - importantParam.oneTimeExpenses/100));
       let monthIntRate = importantParam.intRate / nbrPmtPerYear / 100;
       let fixExpRatio = importantParam.fixExpenses / nbrPmtPerYear / 100;
       let nbrPer = importantParam.nbrYears * nbrPmtPerYear;
