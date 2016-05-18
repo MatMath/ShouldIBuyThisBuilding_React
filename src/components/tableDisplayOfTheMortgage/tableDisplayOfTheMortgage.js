@@ -31,7 +31,7 @@ class TableDisplayOfTheMortgage extends React.Component {
 				<BootstrapTable
 					data={mortgateTable}
 					striped={true}
-					height={300}>
+					height='300px'>
 				  <TableHeaderColumn dataField="period" isKey={true} dataSort={true}>Month</TableHeaderColumn>
 				  <TableHeaderColumn dataField="houseValue" dataSort={true} dataFormat={format}>house Value</TableHeaderColumn>
 				  <TableHeaderColumn dataField="mortgateValue" dataSort={true} dataFormat={format}>Mortgage</TableHeaderColumn>

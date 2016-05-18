@@ -65,6 +65,7 @@ class Inputcontroller extends React.Component {
     }
   }
   returnThisForCalculation() {
+    // Not sure how to setup a auto-refresh on every click. I tried and it was always sending the state -1 not the current one.
     this.props.extractParamForCalculation(this.state);
   }
   customClickOnBootstrapButtons(eventKey, event) {
@@ -80,6 +81,13 @@ class Inputcontroller extends React.Component {
     const {houseValue, downPayment, fixExpenses, intRate, nbrYears, averageRent, nbrAppartment, oneTimeExpenses, isDisabled} = this.state;
     return (
       <div>
+        <div className='row'>
+        <div className='col-sm-2'>Neiborhood:</div>
+        <div className='col-sm-6'>
+          <SelectNeiborhood className='form-control'neiborhoodlist={neiborhoodlist} neiborhoodSelected={this.neiborhoodSelected}/></div>
+        <div className='col-sm-4'>{this.state.neiborhoodName} with #{this.state.neiborhoodCode}</div>
+        </div>
+
         <div className='row'>
           <div className='col-sm-2'>
           <ButtonToolbar>
@@ -105,10 +113,18 @@ class Inputcontroller extends React.Component {
         </div>
 
         <div className='row'>
-        <div className='col-sm-2'>Neiborhood:</div>
+        <div className='col-sm-2'><button className='btn btn-info'>Estimate Rent</button></div>
         <div className='col-sm-6'>
-          <SelectNeiborhood className='form-control'neiborhoodlist={neiborhoodlist} neiborhoodSelected={this.neiborhoodSelected}/></div>
-        <div className='col-sm-4'>{this.state.neiborhoodName} with #{this.state.neiborhoodCode}</div>
+          <div className="form-group">
+            <div className="input-group">
+              <div className="input-group-addon">$</div>
+              <input type="number" className="form-control"
+                value={averageRent}
+                onChange={this.changeNumberValue.bind(this, 'averageRent')} />
+            </div>
+          </div>
+        </div>
+        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>
@@ -179,21 +195,6 @@ class Inputcontroller extends React.Component {
           </div>
         </div>
         <div className='col-sm-4'>input a sidebar control</div>
-        </div>
-
-        <div className='row'>
-        <div className='col-sm-2'><button className='btn btn-info'>Estimate Rent</button></div>
-        <div className='col-sm-6'>
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-group-addon">$</div>
-              <input type="number" className="form-control"
-                value={averageRent}
-                onChange={this.changeNumberValue.bind(this, 'averageRent')} />
-            </div>
-          </div>
-        </div>
-        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>
