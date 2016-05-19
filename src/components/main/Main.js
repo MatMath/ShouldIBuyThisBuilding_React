@@ -17,15 +17,15 @@ function calculateThePV (principal, monthIntRate, nbrPer) {
   return (principal*monthIntRate)/(1-1/Math.pow((1+monthIntRate),nbrPer));
 }
 
-function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt) {
+function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt, houseYearlyPriceIncrease, rentIncreaseRate) {
   // One of many website that give formulas for compound interest: https://en.wikipedia.org/wiki/Compound_interest#Monthly_amortized_loan_or_mortgage_payments
   // Note: https://github.com/cristobal-io/mortgage-calculator give awesome API, but not exactly what I need.
   const perr = tablePmt.length;
   let {mortgateValue, houseValue, rentIncome} = tablePmt[perr-1];
   if (perr%12 === 0) {
     // Every year we increase the rent of 1.5% --> To extract from Quandl maybe.
-    rentIncome *= 1.015;
-    houseValue *= 1.02;
+    rentIncome *= (1 + rentIncreaseRate/100);
+    houseValue *= (1 + houseYearlyPriceIncrease/100);
   }
   mortgateValue = mortgateValue * (1+monthIntRate) - pmt;
   //HouseValue increase could be extracted historically from Quandl
@@ -42,7 +42,7 @@ function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt) {
 
   if (mortgateValue > 0 && perr < 500) {
     tablePmt.push(itemToPush);
-    return buildMortgageTable(tablePmt, fixExpRatio, monthIntRate, pmt);
+    return buildMortgageTable(tablePmt, fixExpRatio, monthIntRate, pmt, houseYearlyPriceIncrease, rentIncreaseRate);
   } else {
     return tablePmt;
   }
@@ -93,6 +93,7 @@ class AppComponent extends React.Component {
       let nbrPer = importantParam.nbrYears * nbrPmtPerYear;
       let pmt = calculateThePV(principal, monthIntRate, nbrPer);
       let rentIncome = importantParam.nbrAppartment * importantParam.averageRent;
+      let {houseYearlyPriceIncrease, longTermInvestmentReturnRate, rentIncreaseRate} = importantParam;
 
       mortgateTable = [{
         period: 0,
@@ -104,7 +105,7 @@ class AppComponent extends React.Component {
         fixExpenses: 0,
         totalPmt: 0
       }];
-      mortgateTable = buildMortgageTable(mortgateTable, fixExpRatio, monthIntRate, pmt);
+      mortgateTable = buildMortgageTable(mortgateTable, fixExpRatio, monthIntRate, pmt, houseYearlyPriceIncrease, rentIncreaseRate);
       mortgateTable.shift(); //Removign the initial element since they will be display as a summary somewhere else.
 
       // calcParam In the State = Pollute the state with useless data.
@@ -113,7 +114,7 @@ class AppComponent extends React.Component {
         mortgage: principal,
         downPayment: importantParam.houseValue*(importantParam.downPayment - importantParam.oneTimeExpenses)/100,
         pmt: pmt,
-        currentValue: getInvestmentReturnValue(mortgateTable, 1.0058)
+        currentValue: getInvestmentReturnValue(mortgateTable, (1+longTermInvestmentReturnRate/100/nbrPmtPerYear))
       };
       this.setState({calcParam: calcParam});
     }

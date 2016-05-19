@@ -1,6 +1,6 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
-import {ButtonToolbar, DropdownButton, MenuItem} from 'react-bootstrap';
+import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Button, Tooltip} from 'react-bootstrap';
 import {convertToCurrency} from '../utils';
 
 
@@ -25,6 +25,9 @@ class Inputcontroller extends React.Component {
     super(props)
     this.state = {
       houseValue: 500000,
+      houseYearlyPriceIncrease: 3,
+      longTermInvestmentReturnRate: 7,
+      rentIncreaseRate: 1.5,
       downPayment: 10,
       intRate: parseFloat(this.props.interestRate[0].latestIntRate),
       fixExpenses: 1.75,
@@ -33,11 +36,9 @@ class Inputcontroller extends React.Component {
       averageRent:1000,
       neiborhoodName: '',
       neiborhoodCode: '',
-      isDisabled: true,
       nbrYears: 5
     }
     this.neiborhoodSelected = this.neiborhoodSelected.bind(this);
-    this.checkTheClass = this.checkTheClass.bind(this);
     this.returnThisForCalculation = this.returnThisForCalculation.bind(this);
     this.customClickOnBootstrapButtons = this.customClickOnBootstrapButtons.bind(this);
     this.dropddownButtonSelectIntRate = this.dropddownButtonSelectIntRate.bind(this);
@@ -55,14 +56,6 @@ class Inputcontroller extends React.Component {
       neiborhoodName: returnedValue.name,
       neiborhoodCode: returnedValue.code
     });
-    this.checkTheClass();
-  }
-  checkTheClass() {
-    if (this.state.neiborhoodName && this.state.neiborhoodCode) {
-      // This make the button to make the calculation possible.
-      // Yes this could be automaticl but I play with even and states
-      this.setState({isDisabled: false});
-    }
   }
   returnThisForCalculation() {
     // Not sure how to setup a auto-refresh on every click. I tried and it was always sending the state -1 not the current one.
@@ -78,7 +71,10 @@ class Inputcontroller extends React.Component {
   
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
-    const {houseValue, downPayment, fixExpenses, intRate, nbrYears, averageRent, nbrAppartment, oneTimeExpenses, isDisabled} = this.state;
+    const {houseValue, downPayment, fixExpenses, intRate, nbrYears, averageRent, nbrAppartment, oneTimeExpenses, houseYearlyPriceIncrease, longTermInvestmentReturnRate, rentIncreaseRate} = this.state;
+    const houseToolTip = (<Tooltip id='houseToolTip'>Expected % of price increase of the house per year.</Tooltip>);
+    const investmentToolTip = (<Tooltip id='investmentToolTip'>Expected annual return on long term investment.</Tooltip>);
+    const rentIncreaseToolTip = (<Tooltip id='rentIncreaseToolTip'>Expected annual increase of the rent.</Tooltip>);
     return (
       <div>
         <div className='row'>
@@ -124,12 +120,23 @@ class Inputcontroller extends React.Component {
             </div>
           </div>
         </div>
-        <div className='col-sm-4'></div>
+        <div className='col-sm-4'>
+           <OverlayTrigger placement="top" overlay={rentIncreaseToolTip}>
+            <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-addon">% Rent increase</div>
+                  <input type="number" className="form-control"
+                    value={rentIncreaseRate}
+                    onChange={this.changeNumberValue.bind(this, 'rentIncreaseRate')} />
+                </div>
+            </div>
+          </OverlayTrigger>
+        </div>
         </div>
 
         <div className='row'>
         <div className='col-sm-2'>House Value: </div>
-        <div className='col-sm-6'>
+        <div className='col-sm-3'>
           <div className="form-group">
               <div className="input-group">
                 <div className="input-group-addon">$</div>
@@ -139,7 +146,19 @@ class Inputcontroller extends React.Component {
               </div>
           </div>
         </div>
-        <div className='col-sm-4'>{convertToCurrency(houseValue)} $ </div>
+        <div className='col-sm-3 text-center'>{convertToCurrency(houseValue)} $ </div>
+        <div className='col-sm-4'>
+           <OverlayTrigger placement="top" overlay={houseToolTip}>
+            <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-addon">% Increase yearly</div>
+                  <input type="number" className="form-control"
+                    value={houseYearlyPriceIncrease}
+                    onChange={this.changeNumberValue.bind(this, 'houseYearlyPriceIncrease')} />
+                </div>
+            </div>
+          </OverlayTrigger> 
+        </div>
         </div>
 
         <div className='row'>
@@ -155,7 +174,18 @@ class Inputcontroller extends React.Component {
           </div>
         </div>
         <div className='col-sm-3 text-center'>{convertToCurrency(houseValue*downPayment/100)} $ </div>
-        <div className='col-sm-4'>input a sidebar control</div>
+        <div className='col-sm-4'>
+         <OverlayTrigger placement="top" overlay={investmentToolTip}>
+          <div className="form-group">
+              <div className="input-group">
+                <div className="input-group-addon">% Long investment</div>
+                <input type="number" className="form-control"
+                  value={longTermInvestmentReturnRate}
+                  onChange={this.changeNumberValue.bind(this, 'longTermInvestmentReturnRate')} />
+              </div>
+          </div>
+        </OverlayTrigger> 
+        </div>
         </div>
 
         <div className='row'>
