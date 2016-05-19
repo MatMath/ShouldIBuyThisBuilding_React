@@ -33,10 +33,10 @@ class Inputcontroller extends React.Component {
       fixExpenses: 1.75,
       oneTimeExpenses: 1.25,
       nbrAppartment: 1,
-      averageRent:1000,
+      averageRent:1900,
       neiborhoodName: '',
       neiborhoodCode: '',
-      nbrYears: 5
+      nbrYears: 25
     }
     this.neiborhoodSelected = this.neiborhoodSelected.bind(this);
     this.returnThisForCalculation = this.returnThisForCalculation.bind(this);
@@ -75,6 +75,7 @@ class Inputcontroller extends React.Component {
     const houseToolTip = (<Tooltip id='houseToolTip'>Expected % of price increase of the house per year.</Tooltip>);
     const investmentToolTip = (<Tooltip id='investmentToolTip'>Expected annual return on long term investment.</Tooltip>);
     const rentIncreaseToolTip = (<Tooltip id='rentIncreaseToolTip'>Expected annual increase of the rent.</Tooltip>);
+    const youLiveSomewhere = (<Tooltip id='youLiveSomewhere'>If you dont live there you will pay rent somewhere else at the same time.</Tooltip>);
     return (
       <div>
         <div className='row'>
@@ -105,7 +106,11 @@ class Inputcontroller extends React.Component {
                 </div>
             </div>
           </div>
-          <div className='col-sm-4'> </div>
+          <div className='col-sm-4'>
+            <OverlayTrigger placement="top" overlay={youLiveSomewhere}>
+              <span>Include your appartment that you will live in as rented.</span>
+            </OverlayTrigger>
+          </div>
         </div>
 
         <div className='row'>
@@ -209,7 +214,7 @@ class Inputcontroller extends React.Component {
               </div>
           </div>
         </div>
-        <div className='col-sm-4'>input a sidebar control</div>
+        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>
@@ -224,7 +229,7 @@ class Inputcontroller extends React.Component {
             </div>
           </div>
         </div>
-        <div className='col-sm-4'>input a sidebar control</div>
+        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>
@@ -240,7 +245,7 @@ class Inputcontroller extends React.Component {
           </div>
         </div>
         <div className='col-sm-3'>{parseFloat(fixExpenses).toFixed(2)} % or {convertToCurrency(houseValue*fixExpenses/100)}$/year</div>
-        <div className='col-sm-4'>input a sidebar control</div>
+        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>
@@ -256,7 +261,7 @@ class Inputcontroller extends React.Component {
           </div>
         </div>
         <div className='col-sm-3'>{parseFloat(oneTimeExpenses).toFixed(2)} % or {convertToCurrency(houseValue*oneTimeExpenses/100)}$</div>
-        <div className='col-sm-4'>input a sidebar control</div>
+        <div className='col-sm-4'></div>
         </div>
 
         <div className='row'>

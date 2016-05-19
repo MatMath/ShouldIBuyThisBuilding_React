@@ -55,7 +55,6 @@ function getInvestmentReturnValue(arrayToReduce, reducingFactor) {
   let totalPaidInCurrentValue = arrayToReduce.reduce(function(previousValue, currentValue) {
     let oldValue = previousValue.totalPmt;
     let newValue = currentValue.totalPmt * Math.pow((1/reducingFactor),currentValue.period)
-    console.log(oldValue, newValue);
     return {
       totalPmt: oldValue+newValue,
       period: previousValue.period
@@ -114,6 +113,7 @@ class AppComponent extends React.Component {
         mortgage: principal,
         downPayment: importantParam.houseValue*(importantParam.downPayment - importantParam.oneTimeExpenses)/100,
         pmt: pmt,
+        initialLoanMoney: importantParam.houseValue*importantParam.downPayment/100,
         currentValue: getInvestmentReturnValue(mortgateTable, (1+longTermInvestmentReturnRate/100/nbrPmtPerYear))
       };
       this.setState({calcParam: calcParam});
