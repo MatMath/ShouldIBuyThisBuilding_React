@@ -124,7 +124,12 @@ class AppComponent extends React.Component {
   	const {buildingTypeList, neiborhoodlist, interestRate} = this.props.fetchedData;
     return (
       <div className='index container'>
-  			<Inputcontroller
+  			<div className='row'>
+          <div className='col-sm-2 header-title'><h3 className='span-title'>What is this?</h3></div>
+          <div className='col-sm-10 header-title'><span className='span-title'>This is to see with certain assomption if investing in a building is worth or it is better to invest in a long term portfolio.</span></div>
+        </div>
+        <hr className='double' />
+        <Inputcontroller
           buildingTypeList={buildingTypeList}
           neiborhoodlist={neiborhoodlist}
           interestRate={interestRate}

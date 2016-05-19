@@ -40,7 +40,21 @@ class GenericResults extends React.Component {
 		      	<div className='col-sm-10'>
 		      		If we invest in that building with the current assomption, the current value of that investment is {convertToCurrency(currentValue)}$
 		      		<br/>If we compare that to simply investing the in initial load of {convertToCurrency(initialLoanMoney)}$ in the market at a the same long therm rate.
-		      		<br/>{currentValue > initialLoanMoney ? goodIngestment : badinvestment}
+		      		<br/>{currentValue > initialLoanMoney ? goodIngestment : badinvestment}*
+		      	</div>
+		      </div>
+
+		      <div className='row'>
+		      	<div className='col-sm-3'><strong>Note, this do not consider:</strong></div>
+		      	<div className='col-sm-9'>
+		      		<ul>
+		      			<li>Cost of selling the building</li>
+		      			<li>Deduction/imposition of the loss/gain from rent</li>
+		      			<li>Capital Gain on sellign the portfolio</li>
+		      			<li>Type of portfolio used (ex: tax deductable)</li>
+		      			<li>Jump in the stock/housing market</li>
+		      			<li>Your taxable bracket</li>
+		      		</ul>
 		      	</div>
 		      </div>
 		    </div>
