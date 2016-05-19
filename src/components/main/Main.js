@@ -5,6 +5,7 @@ import React from 'react';
 import Inputcontroller from '../Inputcontroller/Inputcontroller';
 import GenericResults from '../GenericResults/GenericResults';
 import TableDisplayOfTheMortgage from '../tableDisplayOfTheMortgage/tableDisplayOfTheMortgage';
+import GraphDisplay from '../GraphDisplay/GraphDisplay';
 
 // The House value will increase with time, that mean:
 // The Fix expenses will increase (Taxes, renovation).
@@ -136,7 +137,8 @@ class AppComponent extends React.Component {
           extractParamForCalculation={this.extractParamForCalculation}/>
   			<GenericResults calcParam={this.state.calcParam} />
         { mortgateTable.length ? <TableDisplayOfTheMortgage mortgateTable={mortgateTable}/> : null }
-  			<div>d3 Graph of the result expected</div>
+  			{ mortgateTable.length ? <GraphDisplay mortgateTable={mortgateTable}/> : null }
+        <br/>
       </div>
     );
   }
