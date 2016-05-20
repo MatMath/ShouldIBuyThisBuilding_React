@@ -5,7 +5,6 @@ import React from 'react';
 import Inputcontroller from '../Inputcontroller/Inputcontroller';
 import GenericResults from '../GenericResults/GenericResults';
 import TableDisplayOfTheMortgage from '../tableDisplayOfTheMortgage/tableDisplayOfTheMortgage';
-import GraphDisplay from '../GraphDisplay/GraphDisplay';
 
 // The House value will increase with time, that mean:
 // The Fix expenses will increase (Taxes, renovation).
@@ -50,9 +49,9 @@ function buildMortgageTable (tablePmt, fixExpRatio, monthIntRate, pmt, houseYear
 }
 
 function getInvestmentReturnValue(arrayToReduce, reducingFactor) {
-  // How it work: We take everything we pay over time and make it as today value. 
-  // We take how much we can sell the building at the end and transpose it as today value. 
-  // The reducingFactor need to match the current period. 
+  // How it work: We take everything we pay over time and make it as today value.
+  // We take how much we can sell the building at the end and transpose it as today value.
+  // The reducingFactor need to match the current period.
   let totalPaidInCurrentValue = arrayToReduce.reduce(function(previousValue, currentValue) {
     let oldValue = previousValue.totalPmt;
     let newValue = currentValue.totalPmt * Math.pow((1/reducingFactor),currentValue.period)
@@ -137,7 +136,6 @@ class AppComponent extends React.Component {
           extractParamForCalculation={this.extractParamForCalculation}/>
   			<GenericResults calcParam={this.state.calcParam} />
         { mortgateTable.length ? <TableDisplayOfTheMortgage mortgateTable={mortgateTable}/> : null }
-  			{ mortgateTable.length ? <GraphDisplay mortgateTable={mortgateTable}/> : null }
         <br/>
       </div>
     );

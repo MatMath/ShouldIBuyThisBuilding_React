@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "core-js": "^2.0.0",
+    "d3": "^3.5.17",
     "normalize.css": "^4.0.0",
     "react": "^15.0.0",
     "react-autosuggest": "^3.7.3",

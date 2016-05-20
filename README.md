@@ -6,9 +6,14 @@ npm install
 npm run
 
 ## Usage
+Input some building value.
+Change the initial assomption. 
+Make a decision :D.
 
-## History
-TODO: Write history
+Left todo: 
+- Deploying my docker/node server on a stable website 
+- Deploying this frontend also. 
+- Connecting the 2.
 
 ## License
 MIT

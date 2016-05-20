@@ -1,6 +1,6 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
-import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Button, Tooltip} from 'react-bootstrap';
+import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {convertToCurrency} from '../utils';
 
 
@@ -167,7 +167,7 @@ class Inputcontroller extends React.Component {
                     onChange={this.changeNumberValue.bind(this, 'houseYearlyPriceIncrease')} />
                 </div>
             </div>
-          </OverlayTrigger> 
+          </OverlayTrigger>
         </div>
         </div>
 
@@ -194,7 +194,7 @@ class Inputcontroller extends React.Component {
                   onChange={this.changeNumberValue.bind(this, 'longTermInvestmentReturnRate')} />
               </div>
           </div>
-        </OverlayTrigger> 
+        </OverlayTrigger>
         </div>
         </div>
 

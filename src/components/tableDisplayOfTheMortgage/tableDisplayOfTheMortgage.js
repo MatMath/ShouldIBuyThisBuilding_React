@@ -2,7 +2,7 @@ import React from 'react';
 import {convertToCurrency} from '../utils';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-function format(cell, row){
+function format(cell){
   return  convertToCurrency(cell);
 }
 
@@ -10,7 +10,7 @@ class TableDisplayOfTheMortgage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			showFaq: false,
+			showFaq: false
 		}
 		this.showHideFaq = this.showHideFaq.bind(this);
 	}
@@ -25,7 +25,7 @@ class TableDisplayOfTheMortgage extends React.Component {
 				<div className='text-center text-lg'>
 					<h2 onClick={this.showHideFaq}>Table FAQ</h2>
 				</div>
-				<div> 
+				<div>
 					{ this.state.showFaq ? <Faq /> : null }
 				</div>
 				<BootstrapTable
