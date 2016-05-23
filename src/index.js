@@ -13,11 +13,10 @@ var fetchedData = {
 	neiborhoodlist: [{'Region':'Paradise','State':'Las Vegas','Metro':'NV','County':'Las Vegas','City':'Clark','Code':'00001'},{'Region':'Upper West Side','State':'New York','Metro':'NY','County':'New York','City':'New York','Code':'00002'},{'Region':'South Los Angeles','State':'Los Angeles','Metro':'CA','County':'Los Angeles','City':'Los Angeles','Code':'00003'}],
 	interestRate: [{'DB':'5US','name':'5/1-Year Adjustable Rate Mortgage Average in the United States','latestIntRate':2.78},{'DB':'15US','name':'15-Year Fixed Rate Mortgage Average in the United States','latestIntRate':2.81},{'DB':'30US','name':'30-Year Fixed Rate Mortgage Average in the United States','latestIntRate':3.57},{'DB':'WRMORTG','name':'30-Year Conventional Mortgage Rate','latestIntRate':3.61}]
 };
-const HTTP_SERVER = 'http://52.23.118.16'
+const HTTP_SERVER = 'http://52.23.118.16';
 
 // Render the main component into the dom
 var loadedExternalRessources = function() {
-	const {console} = window;
 	// Asynch Fetch, Request Or HTTP or jsonP Or whatever here asynch to get the external ressource from the server.
 	// Trying Fetch Asynch, Request Ajax HTTP call, nothing work at the moment.
 	// This should load asynch the Building, and other components and set the base data.
@@ -37,19 +36,19 @@ var loadedExternalRessources = function() {
 			return res.json();
 		})
 		.then(function(data){
-			// The data is here: 
+			// The data is here:
 			fetchedData.buildingTypeList = data;
-			console.log('Got the Building Type');
+			window.console.log('Got the Building Type');
 			getNeiborhoodCode();
 		})
 		.catch(function(ex) {
 			// Fail to fetch so keep using the default value.
-	    	console.log('parsing failed', ex);
+	    	window.console.log('parsing failed', ex);
 	    	getNeiborhoodCode();
 	  	})
 	}
 
-	function getNeiborhoodCode (callback) {
+	function getNeiborhoodCode () {
 		fetch(`${HTTP_SERVER}/medRentOfArea/hood_codes.json`,{
 			method: 'GET',
 			ContentType: 'json'
@@ -59,19 +58,19 @@ var loadedExternalRessources = function() {
 			return res.json();
 		})
 		.then(function(data){
-			// The data is here: 
+			// The data is here:
 			fetchedData.neiborhoodlist = data;
-			console.log('Got the neiborhood list');
+			window.console.log('Got the neiborhood list');
 			getInterestRate();
 		})
 		.catch(function(ex) {
 			// Fail to fetch so keep using the default value.
-	    	console.log('parsing failed', ex);
+	    	window.console.log('parsing failed', ex);
 	    	getInterestRate();
 	  	})
 	}
 
-	function getInterestRate (callback) {
+	function getInterestRate () {
 		fetch(`${HTTP_SERVER}/intrates`,{
 			method: 'GET',
 			ContentType: 'json'
@@ -81,14 +80,14 @@ var loadedExternalRessources = function() {
 			return res.json();
 		})
 		.then(function(data){
-			// The data is here: 
+			// The data is here:
 			fetchedData.interestRate = data;
-			console.log('Got the Interest Rate');
+			window.console.log('Got the Interest Rate');
 			renderTheView();
 		})
 		.catch(function(ex) {
 			// Fail to fetch so keep using the default value.
-	    	console.log('parsing failed', ex);
+	    	window.console.log('parsing failed', ex);
 	    	renderTheView();
 	  	})
 	}
@@ -97,7 +96,7 @@ var loadedExternalRessources = function() {
 		if (true) {
 			// Should the catch be here? After and If I receive all initial data from the server then render the AppComponent?
 			// Load the app
-			ReactDOM.render(<App fetchedData={fetchedData}/>, document.getElementById('app'));
+			ReactDOM.render(<App fetchedData={fetchedData} HTTP_SERVER={HTTP_SERVER}/>, document.getElementById('app'));
 		} else {
 			// Errorpage
 			ReactDOM.render(<Errorpage />, document.getElementById('app'));

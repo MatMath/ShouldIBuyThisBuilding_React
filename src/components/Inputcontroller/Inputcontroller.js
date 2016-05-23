@@ -1,6 +1,6 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
-import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import {convertToCurrency} from '../utils';
 
 
@@ -11,13 +11,34 @@ function escapeRegexCharacters(str) {
 }
 
 function getSuggestionValue(suggestion) {
-  return suggestion.City;
+  return suggestion.Region;
 }
 
 function renderSuggestion(suggestion) {
   return (
-    <span>{suggestion.City}, {suggestion.Code}</span>
+    <span>{suggestion.Region}, {suggestion.City}, {suggestion.Code}</span>
   );
+}
+
+function getBuildingList(neiborhoodCode, callback) {
+  fetch('http://52.23.118.16/medRentOfArea/N'+neiborhoodCode,{
+    method: 'GET',
+    ContentType: 'json'
+  })
+  .then(function(res) {
+    // This return the header call of the function, not the data.
+    return res.json();
+  })
+  .then(function(data){
+    // console.log('Got the medRentOfArea', data);
+    if (data.AverageRent) {
+      callback(data.AverageRent);
+    }
+  })
+  .catch(function(ex) {
+    // Fail to fetch so keep using the default value.
+      window.console.log('parsing failed', ex);
+    })
 }
 
 class Inputcontroller extends React.Component {
@@ -42,6 +63,7 @@ class Inputcontroller extends React.Component {
     this.returnThisForCalculation = this.returnThisForCalculation.bind(this);
     this.customClickOnBootstrapButtons = this.customClickOnBootstrapButtons.bind(this);
     this.dropddownButtonSelectIntRate = this.dropddownButtonSelectIntRate.bind(this);
+    this.getMedRentOfArea = this.getMedRentOfArea.bind(this);
   }
   changeValue (key, event) {
     // This set the value of the proper Key.
@@ -68,7 +90,14 @@ class Inputcontroller extends React.Component {
     // This is stupid, we should have 1 function that do ALL, but the onChange={this.changeNumberValue.bind(this, 'X')} dosent work! It is stupid, I should be able to tell them at least what key to target.
     this.setState({intRate: parseFloat(event.target.value)});
   }
-  
+  getMedRentOfArea () {
+    var updateThisState = function (neiborhoodRent) {
+      this.setState({averageRent: neiborhoodRent});
+    }
+    updateThisState = updateThisState.bind(this);
+    let neiborhoodCode = this.state.neiborhoodCode;
+    getBuildingList(neiborhoodCode, updateThisState);
+  }
   render() {
     const {buildingTypeList, neiborhoodlist, interestRate} = this.props;
     const {houseValue, downPayment, fixExpenses, intRate, nbrYears, averageRent, nbrAppartment, oneTimeExpenses, houseYearlyPriceIncrease, longTermInvestmentReturnRate, rentIncreaseRate} = this.state;
@@ -117,7 +146,7 @@ class Inputcontroller extends React.Component {
         <div className='row'>
         <div className='col-sm-2'>
           <OverlayTrigger placement="top" overlay={whereDoesItComeFrom}>
-            <button className='btn btn-info'>Estimate Rent</button>
+            <Button onClick={this.getMedRentOfArea}>Estimate Rent</Button>
           </OverlayTrigger>
         </div>
         <div className='col-sm-6'>
@@ -313,7 +342,7 @@ class SelectNeiborhood extends React.Component {
     // This is what pass the argument to the Higher level function.
     // Even if it is decoupled, the higher level function still receive only name and code.
     this.props.neiborhoodSelected({
-      name: suggestion.City,
+      name: suggestion.Region,
       code: suggestion.Code
     });
   }
@@ -323,7 +352,7 @@ class SelectNeiborhood extends React.Component {
       return [];
     }
     const regex = new RegExp('^' + escapedValue, 'i');
-    return this.props.neiborhoodlist.filter(neiborhood => regex.test(neiborhood.City));
+    return this.props.neiborhoodlist.filter(neiborhood => regex.test(neiborhood.Region));
   }
   render() {
     const {value, suggestions } = this.state;
